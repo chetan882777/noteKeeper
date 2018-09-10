@@ -22,6 +22,9 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mTextNotetext;
     private int mNotePosition;
     private boolean mIsCanceling;
+    private String mOriginalCourseId;
+    private String mOriginalNoteTitle;
+    private String mOriginalNoteText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class NoteActivity extends AppCompatActivity {
         mSpinnerCourse.setAdapter(adapterCourses);
 
         readDisplayStateValues();
+        saveOriginalNoteValues();
 
         mTextNoteTitle = findViewById(R.id.text_title_note);
         mTextNotetext = findViewById(R.id.text_note_text);
@@ -51,6 +55,14 @@ public class NoteActivity extends AppCompatActivity {
         if(!mIsNewNote) {
             displayNote(mSpinnerCourse, mTextNoteTitle, mTextNotetext);
         }
+    }
+
+    private void saveOriginalNoteValues() {
+        if(mIsNewNote)
+            return;
+        mOriginalCourseId = mNote.getCourse().getCourseId();
+        mOriginalNoteTitle = mNote.getTitle();
+        mOriginalNoteText = mNote.getText();
     }
 
     private void displayNote(Spinner spinnerCourse, EditText textNoteTitle, EditText textNotetext) {
@@ -129,9 +141,18 @@ public class NoteActivity extends AppCompatActivity {
             if(mIsNewNote){
                 DataManager.getInstance().removeNote(mNotePosition);
             }
+            storePreviousNoteValues();
         }else {
             saveNote();
         }
+    }
+
+    private void storePreviousNoteValues() {
+        CourseInfo course = DataManager.getInstance().getCourse(mOriginalCourseId);
+        mNote.setCourse(course);
+        mNote.setText(mOriginalNoteText);
+        mNote.setTitle(mOriginalNoteTitle);
+
     }
 
     private void saveNote() {
