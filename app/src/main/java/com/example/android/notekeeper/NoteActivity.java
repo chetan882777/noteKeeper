@@ -21,6 +21,7 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mTextNoteTitle;
     private EditText mTextNotetext;
     private int mNotePosition;
+    private boolean mIsCanceling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +96,12 @@ public class NoteActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.send_send_mail) {
+        if (id == R.id.action_send_mail) {
             sendMail();
             return true;
+        }else if (id == R.id.action_cancel_note){
+            mIsCanceling = true;
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -121,7 +125,13 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveNote();
+        if(mIsCanceling){
+            if(mIsNewNote){
+                DataManager.getInstance().removeNote(mNotePosition);
+            }
+        }else {
+            saveNote();
+        }
     }
 
     private void saveNote() {

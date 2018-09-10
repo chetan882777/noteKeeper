@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.notekeeper.NoteActivity">
     <item
-        android:id="@+id/send_send_mail"
+        android:id="@+id/action_send_mail"
         android:orderInCategory="100"
         android:title="Send as mail"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_cancel_note"
+        android:title="Cancel "
+        app:showAsAction="ifRoom" />
 </menu>
