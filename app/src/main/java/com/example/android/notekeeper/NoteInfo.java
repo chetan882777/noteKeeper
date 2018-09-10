@@ -12,7 +12,7 @@ public final class NoteInfo implements Parcelable{
     private String mTitle;
     private String mText;
 
-    public static final String  NOTE_INFO = "com.example.android.notekeeper.NOTE_INFO";
+    public static final String NOTE_POSITION = "com.example.android.noteKeeper.NOTE_POSITION";
 
     public NoteInfo(CourseInfo course, String title, String text) {
         mCourse = course;
