@@ -20,6 +20,7 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner mSpinnerCourse;
     private EditText mTextNoteTitle;
     private EditText mTextNotetext;
+    private int mNotePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +67,17 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int position = intent.getIntExtra(NoteInfo.NOTE_POSITION , POSITION_NOT_SET);
         mIsNewNote = position == POSITION_NOT_SET;
-        if(!mIsNewNote){
+        if(mIsNewNote) {
+            createNewNote();
+        }else{
             mNote = DataManager.getInstance().getNotes().get(position);
         }
+    }
+
+    private void createNewNote() {
+        DataManager dm = DataManager.getInstance();
+        mNotePosition = dm.createNewNote();
+        mNote = dm.getNotes().get(mNotePosition);
     }
 
     @Override
@@ -108,4 +117,17 @@ public class NoteActivity extends AppCompatActivity {
 
         startActivity(mailIntent);
         }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveNote();
+    }
+
+    private void saveNote() {
+        mNote.setCourse((CourseInfo) mSpinnerCourse.getSelectedItem());
+        mNote.setTitle(mTextNoteTitle.getText().toString());
+        mNote.setText(mTextNotetext.getText().toString());
+    }
 }
+
