@@ -14,6 +14,10 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
+    public static final String ORIGINAL_NOTE_COURSE_ID  = "com.example.android.notekeeper.ORIGINAL_NOTE_COURSE_ID";
+    public static final String ORIGINAL_NOTE_TITLE  = "com.example.android.notekeeper.ORIGINAL_NOTE_TITLE";
+    public static final String ORIGINAL_NOTE_TEXT  = "com.example.android.notekeeper.ORIGINAL_NOTE_TEXT";
+
     public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
     private boolean mIsNewNote;
@@ -47,14 +51,32 @@ public class NoteActivity extends AppCompatActivity {
         mSpinnerCourse.setAdapter(adapterCourses);
 
         readDisplayStateValues();
-        saveOriginalNoteValues();
 
+        if(savedInstanceState == null) {
+            saveOriginalNoteValues();
+        }else{
+            restoreOriginalValues(savedInstanceState);
+        }
         mTextNoteTitle = findViewById(R.id.text_title_note);
         mTextNotetext = findViewById(R.id.text_note_text);
 
         if(!mIsNewNote) {
             displayNote(mSpinnerCourse, mTextNoteTitle, mTextNotetext);
         }
+    }
+
+    private void restoreOriginalValues(Bundle savedInstanceState) {
+        mOriginalCourseId = savedInstanceState.getString(ORIGINAL_NOTE_COURSE_ID);
+        mOriginalNoteText = savedInstanceState.getString(ORIGINAL_NOTE_TEXT);
+        mOriginalNoteTitle = savedInstanceState.getString(ORIGINAL_NOTE_TITLE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ORIGINAL_NOTE_COURSE_ID , mOriginalCourseId);
+        outState.putString(ORIGINAL_NOTE_TITLE  , mOriginalNoteTitle);
+        outState.putString(ORIGINAL_NOTE_TEXT , mOriginalNoteText);
     }
 
     private void saveOriginalNoteValues() {
