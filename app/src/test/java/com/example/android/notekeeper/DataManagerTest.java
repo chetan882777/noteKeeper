@@ -1,33 +1,39 @@
 package com.example.android.notekeeper;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class DataManagerTest {
 
+    private static DataManager sDataManager;
+
+    @BeforeClass
+    public static void classSetup() throws Exception{
+        sDataManager = DataManager.getInstance();
+    }
+
     @Before
     public void setUp() throws Exception{
-        DataManager dm = DataManager.getInstance();
-        dm.getNotes().clear();
-        dm.initializeExampleNotes();
+        sDataManager.getNotes().clear();
+        sDataManager.initializeExampleNotes();
     }
 
     @Test
     public void createNewNote() {
-        DataManager dm = DataManager.getInstance();
-        CourseInfo course = dm.getCourse("android_async");
+        CourseInfo course = sDataManager.getCourse("android_async");
         String testTitle =  "test note title";
         String testText = "hi this is test note's text";
 
-        int noteIndex = dm.createNewNote();
-        NoteInfo testNote = dm.getNotes().get(noteIndex);
+        int noteIndex = sDataManager.createNewNote();
+        NoteInfo testNote = sDataManager.getNotes().get(noteIndex);
         testNote.setTitle(testTitle);
         testNote.setText(testText);
         testNote.setCourse(course);
 
-        NoteInfo compareNote = dm.getNotes().get(noteIndex);
+        NoteInfo compareNote = sDataManager.getNotes().get(noteIndex);
 
         /*
             assertSame(compareNote , testNote);
@@ -44,29 +50,28 @@ public class DataManagerTest {
 
     @Test
     public void findSimilarNotes() throws Exception{
-        DataManager dm = DataManager.getInstance();
-        CourseInfo course = dm.getCourse("android_async");
+        CourseInfo course = sDataManager.getCourse("android_async");
         String testTitle =  "test note title";
         String testText = "hi this is test note's text";
         String testText2 = "hi this is test note's text2";
 
-        int noteIndex1 = dm.createNewNote();
-        NoteInfo testNote1 = dm.getNotes().get(noteIndex1);
+        int noteIndex1 = sDataManager.createNewNote();
+        NoteInfo testNote1 = sDataManager.getNotes().get(noteIndex1);
         testNote1.setTitle(testTitle);
         testNote1.setText(testText);
         testNote1.setCourse(course);
 
-        int noteIndex2 = dm.createNewNote();
-        NoteInfo testNote2 = dm.getNotes().get(noteIndex2);
+        int noteIndex2 = sDataManager.createNewNote();
+        NoteInfo testNote2 = sDataManager.getNotes().get(noteIndex2);
         testNote2.setTitle(testTitle);
         testNote2.setText(testText2);
         testNote2.setCourse(course);
 
-        int foundIndex1 = dm.findNote(testNote1);
+        int foundIndex1 = sDataManager.findNote(testNote1);
         assertEquals(foundIndex1 , noteIndex1);
 
 
-        int foundIndex2 = dm.findNote(testNote2);
+        int foundIndex2 = sDataManager.findNote(testNote2);
         assertEquals(foundIndex2 , noteIndex2);
     }
 }
