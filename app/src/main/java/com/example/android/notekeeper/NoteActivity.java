@@ -29,6 +29,7 @@ public class NoteActivity extends AppCompatActivity {
     private String mOriginalCourseId;
     private String mOriginalNoteTitle;
     private String mOriginalNoteText;
+    private int mPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,7 @@ public class NoteActivity extends AppCompatActivity {
     private void restoreOriginalValues(Bundle savedInstanceState) {
         mOriginalCourseId = savedInstanceState.getString(ORIGINAL_NOTE_COURSE_ID);
         mOriginalNoteText = savedInstanceState.getString(ORIGINAL_NOTE_TEXT);
-        mOriginalNoteTitle = savedInstanceState.getString(ORIGINAL_NOTE_TITLE);
-    }
+        mOriginalNoteTitle = savedInstanceState.getString(ORIGINAL_NOTE_TITLE); }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -100,19 +100,19 @@ public class NoteActivity extends AppCompatActivity {
 
     private void readDisplayStateValues() {
         Intent intent = getIntent();
-        int position = intent.getIntExtra(NoteInfo.NOTE_POSITION , POSITION_NOT_SET);
-        mIsNewNote = position == POSITION_NOT_SET;
+        mNotePosition = intent.getIntExtra(NoteInfo.NOTE_POSITION , POSITION_NOT_SET);
+        mIsNewNote = mNotePosition == POSITION_NOT_SET;
         if(mIsNewNote) {
             createNewNote();
-        }else{
-            mNote = DataManager.getInstance().getNotes().get(position);
         }
+            mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+
     }
 
     private void createNewNote() {
         DataManager dm = DataManager.getInstance();
         mNotePosition = dm.createNewNote();
-        mNote = dm.getNotes().get(mNotePosition);
+      //  mNote = dm.getNotes().get(mNotePosition);
     }
 
     @Override
