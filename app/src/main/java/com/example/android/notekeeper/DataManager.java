@@ -195,7 +195,14 @@ public class DataManager {
     }
 
     public int createNewNote(CourseInfo course, String noteTitle, String noteText) {
-        return -1;
+        int noteIndex = createNewNote();
+        NoteInfo note = getNotes().get(noteIndex);
+
+        note.setCourse(course);
+        note.setText(noteText);
+        note.setTitle(noteTitle);
+
+        return noteIndex;
     }
     //endregion
 
