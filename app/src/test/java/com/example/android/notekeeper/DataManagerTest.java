@@ -1,5 +1,7 @@
 package com.example.android.notekeeper;
 
+import android.support.v4.widget.TextViewCompat;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -74,4 +76,21 @@ public class DataManagerTest {
         int foundIndex2 = sDataManager.findNote(testNote2);
         assertEquals(foundIndex2 , noteIndex2);
     }
+
+    @Test
+    public void creatNewNoteOneStepCreation(){
+       final CourseInfo course = sDataManager.getCourse("android_async");
+       final String testTitle =  "test note title";
+       final String testText = "hi this is test note's text";
+
+       int noteIndex = sDataManager.createNewNote(course , testTitle , testText);
+
+       NoteInfo note = sDataManager.getNotes().get(noteIndex);
+
+       assertEquals(course , note.getCourse());
+       assertEquals(testTitle , note.getTitle());
+       assertEquals(testText , note.getText());
+
+    }
+
 }
