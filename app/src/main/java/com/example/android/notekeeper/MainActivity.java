@@ -2,9 +2,9 @@ package com.example.android.notekeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
     private RecyclerView mRecyclerItem;
     private LinearLayoutManager mNotesLayoutManager;
+    private GridLayoutManager mCoursesLayoutManager;
+    private CourseRecyclerAdapter mMCoursesRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +60,33 @@ public class MainActivity extends AppCompatActivity
 
         mRecyclerItem = (RecyclerView) findViewById(R.id.recycler_note_item);
         mNotesLayoutManager = new LinearLayoutManager(this);
+        mCoursesLayoutManager = new GridLayoutManager(this , 2 );
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+        mMCoursesRecyclerAdapter = new CourseRecyclerAdapter(this , courses);
 
         displayNotes();
     }
 
     private void displayNotes() {
-
-        NavigationView nv = (NavigationView) findViewById(R.id.nav_view);
-        Menu menu = nv.getMenu();
-        menu.findItem(R.id.nav_notes).setChecked(true);
-
         mRecyclerItem.setLayoutManager(mNotesLayoutManager);
         mRecyclerItem.setAdapter(mNoteRecyclerAdapter);
+        selectNavigationNemuItem(R.id.nav_notes);
+    }
+
+    private void selectNavigationNemuItem(int id) {
+        NavigationView nv = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = nv.getMenu();
+        menu.findItem(id).setChecked(true);
+    }
+
+    private void displayCourses() {
+        mRecyclerItem.setLayoutManager(mCoursesLayoutManager);
+        mRecyclerItem.setAdapter(mMCoursesRecyclerAdapter);
+        selectNavigationNemuItem(R.id.nav_courses);
     }
 
 
@@ -120,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_courses) {
-            handleSelection("Courses");
+            displayCourses();
 
         } else if (id == R.id.nav_notes) {
             displayNotes();

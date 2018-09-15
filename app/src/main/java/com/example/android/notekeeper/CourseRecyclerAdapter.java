@@ -55,7 +55,7 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v , "courses " +mCurrentPosition , Snackbar.LENGTH_LONG ).show();
+                    Snackbar.make(v , mCourseText.getText() , Snackbar.LENGTH_LONG ).show();
                 }
             });
         }
