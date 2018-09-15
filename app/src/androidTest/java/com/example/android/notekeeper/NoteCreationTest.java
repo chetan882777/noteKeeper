@@ -9,12 +9,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+import static org.junit.Assert.*;
+
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static org.hamcrest.Matchers.*;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.assertion.ViewAssertions.*;
+
+
 
 @RunWith(AndroidJUnit4.class)
 public class NoteCreationTest {
@@ -42,10 +48,23 @@ public class NoteCreationTest {
         onView(withId(R.id.spinner_courses)).perform(click());
         onData(allOf(instanceOf(CourseInfo.class), equalTo(course))).perform(click());
 
+        String temp2 = course.getTitle();
+        onView(withId(R.id.spinner_courses)).check(matches(
+                withSpinnerText(temp2)));
+
         onView(withId(R.id.text_title_note)).perform(typeText(noteTitle));
+        onView(withId(R.id.text_title_note)).check(matches(withText(noteTitle)));
+
         onView(withId(R.id.text_note_text)).perform(typeText(noteText),
-                closeSoftKeyboard());
+                closeSoftKeyboard()).check(matches(withText(noteText)));
 
         pressBack();
+        int noteIndex = sDataManager.getNotes().size() - 1 ;
+        NoteInfo note  = sDataManager.getNotes().get(noteIndex);
+
+        CourseInfo temp = note.getCourse();
+        assertEquals(temp, course);
+        assertEquals(note.getText() , noteText);
+        assertEquals(noteTitle , noteTitle);
     }
 }
