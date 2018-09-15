@@ -17,7 +17,7 @@ import java.util.List;
 public class NoteListActivity extends AppCompatActivity {
 
 
-    private ArrayAdapter<NoteInfo> mAdapterNote;
+    private NoteRecyclerAdapter mNoteRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,39 +39,20 @@ public class NoteListActivity extends AppCompatActivity {
 
     private void initializeDisplayContent() {
 
-     //   final ListView listNotes = (ListView) findViewById(R.id.list_note);
-
-       // List<NoteInfo> notes = DataManager.getInstance().getNotes();
-
-      //  mAdapterNote = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 , notes);
-
-        //listNotes.setAdapter(mAdapterNote);
-
-        //listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-       //     @Override
-         //   public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-           //     Intent intent = new Intent(NoteListActivity.this , NoteActivity.class);
- //               NoteInfo mNote = (NoteInfo) listNotes.getItemAtPosition(i);
-//                String t = mNote.getText();
-             //   intent.putExtra(NoteInfo.NOTE_POSITION, position);
-               // startActivity(intent);
-           // }
-       // });
-
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_note_item);
         final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(notesLayoutManager);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-        final NoteRecyclerAdapter noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+        mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
 
-        recyclerView.setAdapter(noteRecyclerAdapter);
+        recyclerView.setAdapter(mNoteRecyclerAdapter);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-//        mAdapterNote.notifyDataSetChanged();
+        mNoteRecyclerAdapter.notifyDataSetChanged();
     }
 }
