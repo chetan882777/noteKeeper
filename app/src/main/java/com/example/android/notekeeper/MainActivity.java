@@ -2,6 +2,7 @@ package com.example.android.notekeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
+    private RecyclerView mRecyclerItem;
+    private LinearLayoutManager mNotesLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +56,23 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDisplayContent() {
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_note_item);
-        final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(notesLayoutManager);
+        mRecyclerItem = (RecyclerView) findViewById(R.id.recycler_note_item);
+        mNotesLayoutManager = new LinearLayoutManager(this);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
 
-        recyclerView.setAdapter(mNoteRecyclerAdapter);
+        displayNotes();
+    }
+
+    private void displayNotes() {
+
+        NavigationView nv = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = nv.getMenu();
+        menu.findItem(R.id.nav_notes).setChecked(true);
+
+        mRecyclerItem.setLayoutManager(mNotesLayoutManager);
+        mRecyclerItem.setAdapter(mNoteRecyclerAdapter);
     }
 
 
@@ -107,23 +119,27 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_courses) {
+            handleSelection("Courses");
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_notes) {
+            displayNotes();
 
         } else if (id == R.id.nav_share) {
+            handleSelection("Do you want tot share this? wait for update");
 
         } else if (id == R.id.nav_send) {
-
+            handleSelection("send");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handleSelection(String message) {
+        View view = findViewById(R.id.recycler_note_item);
+        Snackbar.make(view , message , Snackbar.LENGTH_LONG).show();
     }
 
 
