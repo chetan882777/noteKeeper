@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 
         mRecyclerItem = (RecyclerView) findViewById(R.id.recycler_note_item);
         mNotesLayoutManager = new LinearLayoutManager(this);
-        mCoursesLayoutManager = new GridLayoutManager(this , R.integer.ocurse_grid_span );
+        mCoursesLayoutManager = new GridLayoutManager(this , getResources().getInteger(R.integer.ocurse_grid_span) );
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
@@ -140,10 +140,10 @@ public class MainActivity extends AppCompatActivity
             displayNotes();
 
         } else if (id == R.id.nav_share) {
-            handleSelection(R.string.nav_share_message);
+            handleSelection(getString(R.string.nav_share_message));
 
         } else if (id == R.id.nav_send) {
-            handleSelection(R.string.nav_send_message);
+            handleSelection(getString(R.string.nav_send_message));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -151,9 +151,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void handleSelection(int message_id) {
+    private void handleSelection(String message) {
         View view = findViewById(R.id.recycler_note_item);
-        Snackbar.make(view , message_id , Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view , message , Snackbar.LENGTH_LONG).show();
     }
 
 
