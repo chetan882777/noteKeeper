@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
             displayNotes();
 
         } else if (id == R.id.nav_share) {
-            handleSelection(getString(R.string.nav_share_message));
+            handleShare();
 
         } else if (id == R.id.nav_send) {
             handleSelection(getString(R.string.nav_send_message));
@@ -177,6 +177,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void handleShare() {
+        View view = findViewById(R.id.recycler_note_item);
+        Snackbar.make(view , "Share to --" + PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("user_fav_social" , ""), Snackbar.LENGTH_LONG).show();
+
     }
 
     private void handleSelection(String message) {

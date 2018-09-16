@@ -18,7 +18,7 @@
     <EditTextPreference
         android:defaultValue="@string/pref_default_email_address"
         android:inputType="textEmailAddress"
-        android:key="user_enmail_address"
+        android:key="user_email_address"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/pref_title_email_address" />
