@@ -23,12 +23,12 @@
         android:singleLine="true"
         android:title="@string/pref_title_email_address" />
     <ListPreference
-        android:defaultValue="-1"
-        android:entries="@array/pref_example_list_titles"
-        android:entryValues="@array/pref_example_list_values"
-        android:key="example_list"
+        android:defaultValue="@string/pref_default_fav_social"
+        android:entries="@array/pref_entries_fav_social"
+        android:entryValues="@array/pref_values_fav_social"
+        android:key="user_fav_social"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="@string/pref_title_add_friends_to_messages" />
+        android:title="@string/pref_title_fav_social" />
 
 </PreferenceScreen>
