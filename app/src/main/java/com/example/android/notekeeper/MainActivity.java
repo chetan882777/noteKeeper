@@ -1,7 +1,9 @@
 package com.example.android.notekeeper;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -43,6 +46,12 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general , false);
+
+        PreferenceManager.setDefaultValues(this, R.xml.pref_data_sync , false);
+
+        PreferenceManager.setDefaultValues(this, R.xml.pref_notification , false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -94,7 +103,24 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mNoteRecyclerAdapter.notifyDataSetChanged();
+        updateNavheader();
     }
+
+    private void updateNavheader() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView textUserName = (TextView) findViewById(R.id.text_user_name);
+        TextView textUserEmail = (TextView) findViewById(R.id.text_email_address);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String userName = pref.getString("user_display_name" , "");
+        String userEmail = pref.getString("user_email_address" , "");
+
+        textUserEmail.setText(userEmail);
+        textUserName.setText(userName);
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
