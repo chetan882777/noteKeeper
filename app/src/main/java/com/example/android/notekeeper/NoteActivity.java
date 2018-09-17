@@ -1,8 +1,8 @@
 package com.example.android.notekeeper;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.android.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
 
@@ -31,6 +33,13 @@ public class NoteActivity extends AppCompatActivity {
     private String mOriginalNoteTitle;
     private String mOriginalNoteText;
     private int mPosition;
+    private NoteKeeperOpenHelper mOpenHelper;
+
+    @Override
+    protected void onDestroy() {
+        mOpenHelper.close();
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,8 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mOpenHelper = new NoteKeeperOpenHelper(this);
 
         // Refernce to spinner in == content_note.xml
         mSpinnerCourse = (Spinner) findViewById(R.id.spinner_courses);
@@ -63,8 +74,20 @@ public class NoteActivity extends AppCompatActivity {
         mTextNotetext = findViewById(R.id.text_note_text);
 
         if(!mIsNewNote) {
-            displayNote(mSpinnerCourse, mTextNoteTitle, mTextNotetext);
+            loadNoteData();
         }
+    }
+
+    private void loadNoteData() {
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+        String courseId = "course_id";
+        String titleStart = "dynamic";
+
+        String selelction = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND " +
+                NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
+
+        String[] selectionArgs = {courseId , titleStart + "%"};
     }
 
     private void restoreOriginalValues(Bundle savedInstanceState) {
@@ -88,15 +111,15 @@ public class NoteActivity extends AppCompatActivity {
         mOriginalNoteText = mNote.getText();
     }
 
-    private void displayNote(Spinner spinnerCourse, EditText textNoteTitle, EditText textNotetext) {
+    private void displayNote() {
         String t = mNote.getText();
-        textNotetext.setText(t);
+        mTextNotetext.setText(t);
         String t2 = mNote.getTitle();
-        textNoteTitle.setText(t2);
+        mTextNoteTitle.setText(t2);
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         int courseindex = courses.indexOf(mNote.getCourse());
-        spinnerCourse.setSelection(courseindex);
+        mSpinnerCourse.setSelection(courseindex);
     }
 
     private void readDisplayStateValues() {
@@ -160,7 +183,7 @@ public class NoteActivity extends AppCompatActivity {
         mNote = DataManager.getInstance().getNotes().get(mNotePosition);
 
         saveOriginalNoteValues();
-        displayNote( mSpinnerCourse , mTextNoteTitle , mTextNotetext);
+        displayNote();
         invalidateOptionsMenu();
     }
 
