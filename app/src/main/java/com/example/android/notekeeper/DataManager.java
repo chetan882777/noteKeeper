@@ -40,11 +40,38 @@ public class DataManager {
 
         loadCourseFromDatabase(courseCursor);
 
-        String[] noteColumns= {NoteInfoEntry.COLUMN_NOTE_TITLE,
-                NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+        String[] noteColumns= {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT,
+                NoteInfoEntry.COLUMN_COURSE_ID};
 
         Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
                 null, null, null, null, null);
+        loadNotesFromDatabase(noteCursor);
+    }
+
+    private static void loadNotesFromDatabase(Cursor cursor) {
+        int courseIdPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        int noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        int noteTextPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        DataManager dm  = getInstance();
+
+        dm.mNotes.clear();
+
+        while (cursor.moveToNext()){
+            String courseId = cursor.getString(courseIdPos);
+            String noteTitle = cursor.getString(noteTitlePos);
+            String noteText = cursor.getString(noteTextPos);
+
+            CourseInfo course = dm.getCourse(courseId);
+
+            NoteInfo note = new NoteInfo(course , noteTitle , noteText);
+
+            dm.mNotes.add(note);
+        }
+
+        cursor.close();
     }
 
     private static void loadCourseFromDatabase(Cursor cursor) {
@@ -64,6 +91,7 @@ public class DataManager {
             db.mCourses.add(course);
         }
 
+        cursor.close();
     }
 
     public String getCurrentUserName() {
