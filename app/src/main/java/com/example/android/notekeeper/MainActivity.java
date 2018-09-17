@@ -2,6 +2,7 @@ package com.example.android.notekeeper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mNotesLayoutManager;
     private GridLayoutManager mCoursesLayoutManager;
     private CourseRecyclerAdapter mMCoursesRecyclerAdapter;
+    private NoteKeeperOpenHelper mDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mDbOpenHelper = new NoteKeeperOpenHelper(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDisplayContent() {
 
+        DataManager.loadFromDatabase(mDbOpenHelper);
+
         mRecyclerItem = (RecyclerView) findViewById(R.id.recycler_note_item);
         mNotesLayoutManager = new LinearLayoutManager(this);
         mCoursesLayoutManager = new GridLayoutManager(this , getResources().getInteger(R.integer.ocurse_grid_span) );
@@ -96,14 +102,21 @@ public class MainActivity extends AppCompatActivity
         mRecyclerItem.setLayoutManager(mCoursesLayoutManager);
         mRecyclerItem.setAdapter(mMCoursesRecyclerAdapter);
         selectNavigationNemuItem(R.id.nav_courses);
+
+
     }
 
+    @Override
+    protected void onDestroy() {
+        mDbOpenHelper.close();
+        super.onDestroy();
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         mNoteRecyclerAdapter.notifyDataSetChanged();
-        updateNavheader();
+      //  updateNavheader();
     }
 
     private void updateNavheader() {
