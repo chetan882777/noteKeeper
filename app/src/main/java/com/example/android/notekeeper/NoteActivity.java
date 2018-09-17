@@ -1,6 +1,7 @@
 package com.example.android.notekeeper;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,10 @@ public class NoteActivity extends AppCompatActivity {
     private String mOriginalNoteText;
     private int mPosition;
     private NoteKeeperOpenHelper mOpenHelper;
+    private Cursor mNoteCursor;
+    private int mCourseIdPos;
+    private int mNoteTitlePos;
+    private int mNoteTextPos;
 
     @Override
     protected void onDestroy() {
@@ -81,13 +86,31 @@ public class NoteActivity extends AppCompatActivity {
     private void loadNoteData() {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
-        String courseId = "course_id";
+        String courseId = "android_intents";
         String titleStart = "dynamic";
 
         String selelction = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND " +
                 NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
 
         String[] selectionArgs = {courseId , titleStart + "%"};
+
+        String[] noteColumns =   {
+                NoteInfoEntry.COLUMN_COURSE_ID ,
+                NoteInfoEntry.COLUMN_NOTE_TITLE ,
+                NoteInfoEntry.COLUMN_NOTE_TEXT };
+
+        mNoteCursor = db.query(NoteInfoEntry.TABLE_NAME ,
+                noteColumns ,
+                selelction ,
+                selectionArgs ,
+                null , null , null);
+
+        mCourseIdPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        mNoteTitlePos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        mNoteTextPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        mNoteCursor.moveToNext();
+        displayNote();
     }
 
     private void restoreOriginalValues(Bundle savedInstanceState) {
@@ -112,13 +135,17 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void displayNote() {
-        String t = mNote.getText();
-        mTextNotetext.setText(t);
-        String t2 = mNote.getTitle();
-        mTextNoteTitle.setText(t2);
+        String coursId = mNoteCursor.getString(mCourseIdPos);
+        String noteTitle = mNoteCursor.getString(mNoteTitlePos);
+        String noteText = mNoteCursor.getString(mNoteTextPos);
+       // String t = mNote.getText();
+        mTextNotetext.setText(noteText);
+        //String t2 = mNote.getTitle();
+        mTextNoteTitle.setText(noteTitle);
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        int courseindex = courses.indexOf(mNote.getCourse());
+        CourseInfo course = DataManager.getInstance().getCourse(coursId);
+        int courseindex = courses.indexOf(course);
         mSpinnerCourse.setSelection(courseindex);
     }
 
