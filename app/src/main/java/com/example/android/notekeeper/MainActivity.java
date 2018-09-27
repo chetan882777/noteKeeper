@@ -1,6 +1,9 @@
 package com.example.android.notekeeper;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,7 +28,7 @@ import android.widget.TextView;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener , LoaderManager.LoaderCallbacks<Cursor>{
 
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
     private RecyclerView mRecyclerItem;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private GridLayoutManager mCoursesLayoutManager;
     private CourseRecyclerAdapter mMCoursesRecyclerAdapter;
     private NoteKeeperOpenHelper mDbOpenHelper;
+    private final int LOADER_NOTES_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        loadNote();
+
+        getLoaderManager().restartLoader(LOADER_NOTES_ID , null , this);
       //  updateNavheader();
     }
 
@@ -222,4 +227,51 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = null;
+        if(id == LOADER_NOTES_ID){
+            loader = createLoaderNote();
+        }
+
+        return loader;
+    }
+
+    private CursorLoader createLoaderNote() {
+        return new CursorLoader(this){
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+
+                String[] noteColumns= {
+                        NoteKeeperDatabaseContract.NoteInfoEntry._ID,
+                        NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE,
+                        NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_COURSE_ID};
+
+                String noteOrderBy = NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_COURSE_ID + ","
+                        + NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE;
+
+                return db.query(NoteKeeperDatabaseContract.NoteInfoEntry.TABLE_NAME, noteColumns,
+                        null, null, null, null, noteOrderBy);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(loader.getId() == LOADER_NOTES_ID){
+            loadFinishedNotes(data);
+        }
+    }
+
+    private void loadFinishedNotes(Cursor data) {
+        mNoteRecyclerAdapter.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if(loader.getId() == LOADER_NOTES_ID) {
+            mNoteRecyclerAdapter.changeCursor(null);
+        }
+    }
 }
