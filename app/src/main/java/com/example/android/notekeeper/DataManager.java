@@ -41,6 +41,7 @@ public class DataManager {
         loadCourseFromDatabase(courseCursor);
 
         String[] noteColumns= {
+                NoteInfoEntry._ID,
                 NoteInfoEntry.COLUMN_NOTE_TITLE,
                 NoteInfoEntry.COLUMN_NOTE_TEXT,
                 NoteInfoEntry.COLUMN_COURSE_ID};
@@ -56,6 +57,7 @@ public class DataManager {
         int courseIdPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
         int noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         int noteTextPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+        int noteIdPos = cursor.getColumnIndex(NoteInfoEntry._ID);
 
         DataManager dm  = getInstance();
 
@@ -65,10 +67,11 @@ public class DataManager {
             String courseId = cursor.getString(courseIdPos);
             String noteTitle = cursor.getString(noteTitlePos);
             String noteText = cursor.getString(noteTextPos);
+            int noteId = cursor.getInt(noteIdPos);
 
             CourseInfo course = dm.getCourse(courseId);
 
-            NoteInfo note = new NoteInfo(course , noteTitle , noteText);
+            NoteInfo note = new NoteInfo(noteId , course , noteTitle , noteText);
 
             dm.mNotes.add(note);
         }
