@@ -323,12 +323,27 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(loader.getId() == LOADER_NOTE_ID){
+            loadFinishedNotes(data);
+        }
+    }
 
+    private void loadFinishedNotes(Cursor data) {
+        mNoteCursor = data;
+        mCourseIdPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        mNoteTitlePos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        mNoteTextPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        mNoteCursor.moveToNext();
+        displayNote();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        if(loader.getId() == LOADER_NOTE_ID){
+            if(mNoteCursor != null)
+                mNoteCursor.close();
+        }
     }
 }
 
