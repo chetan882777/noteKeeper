@@ -25,6 +25,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.android.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
+import com.example.android.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -128,14 +131,14 @@ public class MainActivity extends AppCompatActivity
         SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
         String[] noteColumns= {
-                NoteKeeperDatabaseContract.NoteInfoEntry._ID,
-                NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE,
-                NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_COURSE_ID};
+                NoteInfoEntry._ID,
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_COURSE_ID};
 
-        String noteOrderBy = NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_COURSE_ID + ","
-                + NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE;
+        String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + ","
+                + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
-        Cursor noteCursor = db.query(NoteKeeperDatabaseContract.NoteInfoEntry.TABLE_NAME, noteColumns,
+        Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
                 null, null, null, null, noteOrderBy);
 
         mNoteRecyclerAdapter.changeCursor(noteCursor);
@@ -244,14 +247,19 @@ public class MainActivity extends AppCompatActivity
                 SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
                 String[] noteColumns= {
-                        NoteKeeperDatabaseContract.NoteInfoEntry._ID,
-                        NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE,
-                        NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_COURSE_ID};
+                        NoteInfoEntry._ID,
+                        NoteInfoEntry.COLUMN_NOTE_TITLE,
+                        NoteInfoEntry.COLUMN_COURSE_ID};
 
-                String noteOrderBy = NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_COURSE_ID + ","
-                        + NoteKeeperDatabaseContract.NoteInfoEntry.COLUMN_NOTE_TITLE;
+                String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + ","
+                        + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
-                return db.query(NoteKeeperDatabaseContract.NoteInfoEntry.TABLE_NAME, noteColumns,
+                String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN "
+                        + CourseInfoEntry.TABLE_NAME
+                        + " ON "+ NoteInfoEntry.TABLE_NAME + "." + NoteInfoEntry.COLUMN_COURSE_ID
+                        + " = "+ CourseInfoEntry.TABLE_NAME + "." + CourseInfoEntry.COLUMN_COURSE_ID;
+
+                return db.query(tablesWithJoin, noteColumns,
                         null, null, null, null, noteOrderBy);
             }
         };
