@@ -7,6 +7,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -47,6 +48,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private SimpleCursorAdapter mAdapterCourses;
     private final int LOADER_NOTE_ID = 0;
     private final int LOADER_COURSES_ID = 1;
+    private Boolean mCoursesQueryFinished;
+    private Boolean mNotesQueryFinished;
 
     @Override
     protected void onDestroy() {
@@ -296,6 +299,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private CursorLoader createLoaderCourses() {
+        mCoursesQueryFinished = false;
         return new CursorLoader(this){
             @Override
             public Cursor loadInBackground() {
@@ -316,6 +320,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private CursorLoader createLoaderNotes() {
+        mNotesQueryFinished = false;
         return new CursorLoader(this){
             @Override
             public Cursor loadInBackground() {
@@ -350,6 +355,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             loadFinishedNotes(data);
         }else if(loader.getId() == LOADER_COURSES_ID){
             mAdapterCourses.changeCursor(data);
+            mCoursesQueryFinished = true;
+            displayNoteWhenQuariesFinished();
         }
     }
 
@@ -360,7 +367,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         mNoteTextPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
 
         mNoteCursor.moveToNext();
-        displayNote();
+        mNotesQueryFinished = true;
+
+        displayNoteWhenQuariesFinished();
+    }
+
+    private void displayNoteWhenQuariesFinished() {
+        if(mNotesQueryFinished && mCoursesQueryFinished){
+            displayNote();
+        }
     }
 
     @Override
