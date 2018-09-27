@@ -1,6 +1,8 @@
 package com.example.android.notekeeper;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -18,7 +20,7 @@ import com.example.android.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
 
-public class NoteActivity extends AppCompatActivity {
+public class NoteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String ORIGINAL_NOTE_COURSE_ID  = "com.example.android.notekeeper.ORIGINAL_NOTE_COURSE_ID";
     public static final String ORIGINAL_NOTE_TITLE  = "com.example.android.notekeeper.ORIGINAL_NOTE_TITLE";
@@ -42,6 +44,7 @@ public class NoteActivity extends AppCompatActivity {
     private int mNoteTitlePos;
     private int mNoteTextPos;
     private SimpleCursorAdapter mAdapterCourses;
+    private int LOADER_NOTE_ID;
 
     @Override
     protected void onDestroy() {
@@ -79,7 +82,8 @@ public class NoteActivity extends AppCompatActivity {
         mTextNotetext = findViewById(R.id.text_note_text);
 
         if(!mIsNewNote) {
-            loadNoteData();
+            LOADER_NOTE_ID = 0;
+            getLoaderManager().initLoader(LOADER_NOTE_ID , null , this);
         }
 
         if(savedInstanceState == null) {
@@ -292,6 +296,24 @@ public class NoteActivity extends AppCompatActivity {
         mNote.setCourse((CourseInfo) mSpinnerCourse.getSelectedItem());
         mNote.setTitle(mTextNoteTitle.getText().toString());
         mNote.setText(mTextNotetext.getText().toString());
+    }
+
+
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
 
