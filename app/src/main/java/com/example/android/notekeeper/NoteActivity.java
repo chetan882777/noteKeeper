@@ -1,6 +1,7 @@
 package com.example.android.notekeeper;
 
 import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -110,27 +111,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void loadNoteData() {
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
-       // String courseId = "android_intents";
-       // String titleStart = "dynamic";
-
-        int id = mNotePosition;
-
-        String selelction = NoteInfoEntry._ID + " = ?" ;
-
-        String[] selectionArgs = {Integer.toString(id)};
-
-        String[] noteColumns =   {
-                NoteInfoEntry.COLUMN_COURSE_ID ,
-                NoteInfoEntry.COLUMN_NOTE_TITLE ,
-                NoteInfoEntry.COLUMN_NOTE_TEXT };
-
-        mNoteCursor = db.query(NoteInfoEntry.TABLE_NAME ,
-                noteColumns ,
-                selelction ,
-                selectionArgs ,
-                null , null , null);
 
         mCourseIdPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
         mNoteTitlePos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
@@ -303,7 +284,41 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        CursorLoader loader =  null;
+
+        if(id == LOADER_NOTE_ID){
+            loader = createLoaderNotes();
+        }
+        return loader;
+    }
+
+    private CursorLoader createLoaderNotes() {
+        return new CursorLoader(this){
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+                // String courseId = "android_intents";
+                // String titleStart = "dynamic";
+
+                int id = mNotePosition;
+
+                String selelction = NoteInfoEntry._ID + " = ?" ;
+
+                String[] selectionArgs = {Integer.toString(id)};
+
+                String[] noteColumns =   {
+                        NoteInfoEntry.COLUMN_COURSE_ID ,
+                        NoteInfoEntry.COLUMN_NOTE_TITLE ,
+                        NoteInfoEntry.COLUMN_NOTE_TEXT };
+
+                return db.query(NoteInfoEntry.TABLE_NAME ,
+                        noteColumns ,
+                        selelction ,
+                        selectionArgs ,
+                        null , null , null);
+            }
+        };
     }
 
     @Override
