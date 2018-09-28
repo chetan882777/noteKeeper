@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -350,23 +351,18 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private CursorLoader createLoaderCourses() {
         mCoursesQueryFinished = false;
-        return new CursorLoader(this){
-            @Override
-            public Cursor loadInBackground() {
-                SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
-                String[] coursesColumns = new String[]{
-                        CourseInfoEntry.COLUMN_COURSE_TITLE ,
-                        CourseInfoEntry.COLUMN_COURSE_ID ,
-                        CourseInfoEntry._ID
-                };
+        Uri uri = Uri.parse("content://com.example.android.notekeeper.provider");
 
-                return db.query(CourseInfoEntry.TABLE_NAME , coursesColumns ,
-                        null , null, null , null ,
-                        CourseInfoEntry.COLUMN_COURSE_TITLE);
 
-            }
+        String[] coursesColumns = new String[]{
+                CourseInfoEntry.COLUMN_COURSE_TITLE ,
+                CourseInfoEntry.COLUMN_COURSE_ID ,
+                CourseInfoEntry._ID
         };
+
+        return new CursorLoader(this , uri , coursesColumns ,
+                null , null ,CourseInfoEntry.COLUMN_COURSE_TITLE);
     }
 
     private CursorLoader createLoaderNotes() {
