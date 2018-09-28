@@ -189,9 +189,16 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void createNewNote() {
-        DataManager dm = DataManager.getInstance();
-        mNotePosition = dm.createNewNote();
-      //  mNote = dm.getNotes().get(mNotePosition);
+
+        ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID , "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE , "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT , "");
+
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        mNotePosition = (int) db.insert(NoteInfoEntry.TABLE_NAME , null , values);
+
     }
 
     @Override
