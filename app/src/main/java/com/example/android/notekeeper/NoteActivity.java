@@ -279,9 +279,22 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void saveNote() {
-        mNote.setCourse((CourseInfo) mSpinnerCourse.getSelectedItem());
-        mNote.setTitle(mTextNoteTitle.getText().toString());
-        mNote.setText(mTextNotetext.getText().toString());
+        String courseId = selectedCourseId();
+        String noteTitle = mTextNoteTitle.getText().toString();
+        String noteText = mTextNotetext.getText().toString();
+
+        saveNoteToDatabase(courseId , noteTitle , noteText);
+    }
+
+    private String selectedCourseId() {
+        int selectedPosition = mSpinnerCourse.getSelectedItemPosition();
+
+        Cursor cursor = mAdapterCourses.getCursor();
+        cursor.moveToPosition(selectedPosition);
+
+        String courseId = cursor.getString(mCourseIdPos);
+
+        return courseId;
     }
 
 
