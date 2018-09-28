@@ -1,6 +1,7 @@
 package com.example.android.notekeeper;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -284,7 +285,19 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    private void saveNoteToDatabase(String courseId , String noteTitle , String noteText){
+        String selection = NoteInfoEntry._ID + " = ?";
+        String[] slelection_args = {Integer.toString(mNotePosition)};
 
+        ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID , courseId);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE , noteTitle);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT , noteText);
+
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        db.update(NoteInfoEntry.TABLE_NAME , values , selection , slelection_args);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

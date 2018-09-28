@@ -10,10 +10,10 @@ import com.example.android.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 public class NoteKeeperOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "NoteKeeper.db";
-    public static final int DATBASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 2;
 
     public NoteKeeperOpenHelper(Context context ) {
-        super(context, DATABASE_NAME , null, DATBASE_VERSION);
+        super(context, DATABASE_NAME , null, DATABASE_VERSION);
     }
 
     @Override
