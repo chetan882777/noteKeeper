@@ -269,12 +269,21 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onPause();
         if(mIsCanceling){
             if(mIsNewNote){
-                DataManager.getInstance().removeNote(mNotePosition);
+                deleteNoteFormDatabase();
             }
             storePreviousNoteValues();
         }else {
-           // saveNote();
+            saveNote();
         }
+    }
+
+    private void deleteNoteFormDatabase() {
+        String selection = NoteInfoEntry._ID + " = ?";
+        String[] slection_args = {Integer.toString(mNotePosition)};
+
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        db.delete(NoteInfoEntry.TABLE_NAME , selection , slection_args);
     }
 
     private void storePreviousNoteValues() {
