@@ -1,6 +1,7 @@
 package com.example.android.notekeeper;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -57,10 +58,12 @@ public class NoteKeeperProvider extends ContentProvider {
         switch (uriMatch){
             case COURSES:
                 rowId = db.insert(CourseInfoEntry.TABLE_NAME , null , values);
+                rowUri = ContentUris.withAppendedId(Courses.CONTENT_URI , rowId);
                 break;
 
             case NOTES:
                 rowId = db.insert(NoteInfoEntry.TABLE_NAME , null , values);
+                rowUri = ContentUris.withAppendedId(Notes.CONTENT_URI , rowId);
                 break;
 
             case NOTES_EXTENDED:
