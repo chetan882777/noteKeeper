@@ -23,8 +23,8 @@ public class NoteKeeperProvider extends ContentProvider {
     public static final int NOTES = 1;
 
     static {
-        sUriMatcher.addURI(AUTHORITY , Courses.path , COURSES);
-        sUriMatcher.addURI(AUTHORITY , Notes.path , NOTES);
+        sUriMatcher.addURI(AUTHORITY , Courses.PATH, COURSES);
+        sUriMatcher.addURI(AUTHORITY , Notes.PATH, NOTES);
     }
 
     public NoteKeeperProvider() {
