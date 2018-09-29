@@ -49,8 +49,26 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        long rowId = -1 ;
+        Uri rowUri = null;
+        int uriMatch = sUriMatcher.match(uri);
+        switch (uriMatch){
+            case COURSES:
+                rowId = db.insert(CourseInfoEntry.TABLE_NAME , null , values);
+                break;
+
+            case NOTES:
+                rowId = db.insert(NoteInfoEntry.TABLE_NAME , null , values);
+                break;
+
+            case NOTES_EXTENDED:
+                // throws exception saying that's is read only table
+                break;
+        }
+
+        return rowUri;
     }
 
     @Override
