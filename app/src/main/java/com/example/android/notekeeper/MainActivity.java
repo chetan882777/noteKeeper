@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import com.example.android.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.android.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
+import com.example.android.notekeeper.NoteKeeperProviderContract.Courses;
+import com.example.android.notekeeper.NoteKeeperProviderContract.Notes;
 
 import java.util.List;
 
@@ -233,37 +235,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = null;
-        if(id == LOADER_NOTES_ID){
-            loader = createLoaderNote();
-        }
 
+        String[] noteColumns= {
+                NoteInfoEntry.getQName(NoteInfoEntry._ID),
+                Notes.COLUMN_NOTE_TITLE,
+                Courses.COLUMN_COURSE_TITLE};
+
+        String noteOrderBy = Courses.COLUMN_COURSE_TITLE + ","
+                + Notes.COLUMN_NOTE_TITLE;
+
+
+        loader = new CursorLoader(this , Notes.CONTENT_EXPANDED_URI , noteColumns , null ,
+                null , noteOrderBy);
         return loader;
     }
 
-    private CursorLoader createLoaderNote() {
-        return new CursorLoader(this){
-            @Override
-            public Cursor loadInBackground() {
-                SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
-                String[] noteColumns= {
-                        NoteInfoEntry.getQName(NoteInfoEntry._ID),
-                        NoteInfoEntry.COLUMN_NOTE_TITLE,
-                        CourseInfoEntry.COLUMN_COURSE_TITLE};
-
-                String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE + ","
-                        + NoteInfoEntry.COLUMN_NOTE_TITLE;
-
-                String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN "
-                        + CourseInfoEntry.TABLE_NAME
-                        + " ON "+ NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID)
-                        + " = "+ CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_TITLE);
-
-                return db.query(tablesWithJoin, noteColumns,
-                        null, null, null, null, noteOrderBy);
-            }
-        };
-    }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
