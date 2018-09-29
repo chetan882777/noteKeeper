@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity
         CursorLoader loader = null;
 
         String[] noteColumns= {
-                NoteInfoEntry.getQName(NoteInfoEntry._ID),
+                Notes._ID,
                 Notes.COLUMN_NOTE_TITLE,
                 Courses.COLUMN_COURSE_TITLE};
 
