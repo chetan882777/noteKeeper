@@ -6,8 +6,8 @@ import android.provider.BaseColumns;
 public final class NoteKeeperProviderContract {
     private NoteKeeperProviderContract(){}
 
-    private static final String AUTHORITY = "com.example.android.notekeeper.provider";
-    private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
+    public static final String AUTHORITY = "com.example.android.notekeeper.provider";
+    public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     protected interface CourseIdColumn{
         String COLUMN_COURSE_ID = "course_id";
@@ -21,12 +21,12 @@ public final class NoteKeeperProviderContract {
         String COLUMN_COURSE_TITLE = "course_title";
     }
 
-    public static final class courses implements BaseColumns , CourseIdColumn , CoursesColumns{
+    public static final class Courses implements BaseColumns , CourseIdColumn , CoursesColumns{
         public static final String path = "courses";
         private static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI , path);
     }
 
-    public static final class notes implements BaseColumns , CourseIdColumn , NotesColumns{
+    public static final class Notes implements BaseColumns , CourseIdColumn , NotesColumns{
         public static final String path = "notes";
         private static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI , path);
     }
