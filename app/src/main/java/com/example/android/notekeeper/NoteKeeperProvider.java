@@ -26,10 +26,13 @@ public class NoteKeeperProvider extends ContentProvider {
 
     public static final int NOTES_EXTENDED = 2;
 
+    public static final int NOTES_ROW = 3;
+
     static {
         sUriMatcher.addURI(AUTHORITY , Courses.PATH, COURSES);
         sUriMatcher.addURI(AUTHORITY , Notes.PATH, NOTES);
         sUriMatcher.addURI(AUTHORITY , Notes.PATH_EXPANDED , NOTES_EXTENDED);
+        sUriMatcher.addURI(AUTHORITY , Notes.PATH  + "/#" , NOTES_ROW);
     }
 
     public NoteKeeperProvider() {
@@ -90,17 +93,26 @@ public class NoteKeeperProvider extends ContentProvider {
         int uriMatch = sUriMatcher.match(uri);
 
         switch (uriMatch){
-            case 0 :
+            case COURSES :
                 cursor = db.query(CourseInfoEntry.TABLE_NAME , projection , selection , selectionArgs ,
                     null, null , sortOrder);
                 break;
 
-            case 1 :
+            case NOTES :
                 cursor = db.query(NoteInfoEntry.TABLE_NAME , projection , selection , selectionArgs ,
                         null, null , sortOrder);
                 break;
 
-            case 2 :cursor =  notesExpandedQUery(db , projection , selection , selectionArgs , sortOrder);
+            case NOTES_EXTENDED :cursor =  notesExpandedQUery(db , projection , selection , selectionArgs , sortOrder);
+                break;
+
+            case NOTES_ROW:
+                long rowId = ContentUris.parseId(uri);
+                String rowSelection = NoteInfoEntry._ID + " = ?";
+                String[] rowSlectionArgs = new String[]{Long.toString(rowId)};
+
+                cursor = db.query(NoteInfoEntry.TABLE_NAME , projection , rowSelection ,
+                        rowSlectionArgs , null , null , null);
                 break;
         }
         return cursor;

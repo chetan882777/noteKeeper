@@ -55,6 +55,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private final int LOADER_COURSES_ID = 1;
     private Boolean mCoursesQueryFinished;
     private Boolean mNotesQueryFinished;
+    private Uri mNoteUri;
 
     @Override
     protected void onDestroy() {
@@ -199,7 +200,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(Notes.COLUMN_NOTE_TITLE , "");
         values.put(Notes.COLUMN_NOTE_TEXT , "");
 
-        Uri uri = getContentResolver().insert(Notes.CONTENT_URI , values);
+        mNoteUri = getContentResolver().insert(Notes.CONTENT_URI , values);
     }
 
     @Override
