@@ -17,7 +17,7 @@ public class NoteUploaderJobService extends JobService {
     }
 
     @Override
-    public boolean onStartJob(JobParameters params) {
+    public boolean onStartJob(final JobParameters params) {
         AsyncTask<JobParameters , Void , Void> task = new AsyncTask<JobParameters, Void, Void>() {
             @Override
             protected Void doInBackground(JobParameters... jobParameters) {
@@ -25,7 +25,7 @@ public class NoteUploaderJobService extends JobService {
                 String stringDatauri = jobParameters[0].getExtras().getString(EXTRA_DATA_URI);
                 Uri datauri = Uri.parse(stringDatauri);
                 mNoteUploader.doUpload(datauri);
-
+                jobFinished(params , false);
                 return null;
             }
         };
