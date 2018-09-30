@@ -31,7 +31,8 @@ public class NoteUploaderJobService extends JobService {
         };
 
         mNoteUploader = new NoteUploader(this);
-        return false;
+        task.execute(params);
+        return true;
     }
 
     @Override
