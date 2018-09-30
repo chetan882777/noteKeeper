@@ -55,6 +55,9 @@ public class NoteReminderNotification {
         Intent noteIntent = new Intent(context , NoteActivity.class)
                 .putExtra(NoteInfo.NOTE_POSITION , noteId);
 
+        Intent noteBackupIntent = new Intent(context , NoteBackupService.class)
+                .putExtra(NoteBackupService.EXTRA_COURSE_ID , NoteBackup.ALL_COURSES);
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
                 // Set appropriate defaults for the notification light, sound,
@@ -108,9 +111,19 @@ public class NoteReminderNotification {
 
 
                 .addAction( 0 , "View all notes" ,
-                        PendingIntent.getActivity(context , 0 ,
+                        PendingIntent.getActivity(
+                                context ,
+                                0 ,
                                 new Intent(context , MainActivity.class) ,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
+
+                .addAction( 0 , "Bacup all notes" ,
+                        PendingIntent.getService(
+                                context ,
+                                0 ,
+                                noteBackupIntent ,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        ))
 
                 .setAutoCancel(true);
 
