@@ -235,7 +235,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setNotificationReminder() {
-        NoteReminderNotification.notify(this , "This is dumy text" , 0);
+        NoteReminderNotification.notify(this , "This is dumy text" );
     }
 
 
