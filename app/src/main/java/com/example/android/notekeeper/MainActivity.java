@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -234,9 +235,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void sheduleNoteUpload() {
+        PersistableBundle bundle = new PersistableBundle();
+        bundle.putString(NoteUploaderJobService.EXTRA_DATA_URI , Notes.CONTENT_URI.toString());
+
         ComponentName component = new ComponentName(this , NoteUploaderJobService.class);
         JobInfo jobInfo = new JobInfo.Builder(NOTE_UPLOADER_JOB_ID , component)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setExtras(bundle)
                 .build();
 
         JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);

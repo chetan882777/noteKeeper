@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.IBinder;
 
 public class NoteUploaderJobService extends JobService {
+
+    public static final String EXTRA_DATA_URI = "com.example.android.notekeeper.extra_data_uri";
     public NoteUploaderJobService() {
     }
 
