@@ -12,13 +12,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -197,13 +200,25 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void createNewNote() {
-
         AsyncTask<ContentValues , Void , Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+
+            private ProgressBar progressBar = null;
+
+            @Override
+            protected void onPreExecute() {
+                progressBar = findViewById(R.id.progress_bar);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setProgress(1);
+            }
+
             @Override
             protected Uri doInBackground(ContentValues... contentValues) {
                 ContentValues insertValue = contentValues[0];
 
                 Log.d(TAG , "doInBackground method " + Thread.currentThread().getId());
+                simulateLongRunningWork();
+
+                simulateLongRunningWork();
                 Uri rowUri = getContentResolver().insert(Notes.CONTENT_URI , insertValue);
                 return rowUri;
             }
@@ -211,6 +226,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             protected void onPostExecute(Uri uri) {
                 mNoteUri = uri;
+
+                displaySnackbar(mNoteUri.toString());
                 Log.d(TAG , "onPostExecute method " + Thread.currentThread().getId());
             }
         };
@@ -223,6 +240,18 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.d(TAG , "Call to execute " + Thread.currentThread().getId());
         task.execute(values);
          }
+
+
+    private void displaySnackbar(String message) {
+        View view = findViewById(R.id.spinner_courses);
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void simulateLongRunningWork() {
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ex) {}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
