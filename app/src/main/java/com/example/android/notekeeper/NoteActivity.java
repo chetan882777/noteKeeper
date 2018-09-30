@@ -235,7 +235,9 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setNotificationReminder() {
-        NoteReminderNotification.notify(this , "This is dumy text" );
+        String noteText = mTextNotetext.getText().toString();
+        String noteTitle = mTextNoteTitle.getText().toString();
+        NoteReminderNotification.notify(this , noteText , noteTitle);
     }
 
 

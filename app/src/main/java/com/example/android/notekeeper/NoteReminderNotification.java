@@ -42,7 +42,7 @@ public class NoteReminderNotification {
      * @see #cancel(Context)
      */
     public static void notify(final Context context,
-                              final String noteText) {
+                              final String noteText , final String noteTitle) {
         final Resources res = context.getResources();
 
         // This image is used as the notification's large icon (thumbnail).
@@ -81,7 +81,11 @@ public class NoteReminderNotification {
                 // Set ticker text (preview) information for this notification.
                 .setTicker(ticker)
 
-
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(noteTitle)
+                        .bigText(noteText)
+                        .setSummaryText("Review note")
+                )
 
                 // If this notification relates to a past or upcoming event, you
                 // should set the relevant time information using the setWhen
@@ -120,7 +124,7 @@ public class NoteReminderNotification {
 
     /**
      * Cancels any notifications of this type previously shown using
-     * {@link #notify(Context, String)}.
+     * {@link #notify(Context, String , String)}.
      */
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public static void cancel(final Context context) {
