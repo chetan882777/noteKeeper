@@ -21,4 +21,11 @@
         android:visible="false"
         app:showAsAction="ifRoom|withText" />
 
+    <item
+        android:id="@+id/action_set_notification"
+        android:orderInCategory="4"
+        android:title="Set Notification"
+        app:showAsAction="never"
+        />
+
 </menu>

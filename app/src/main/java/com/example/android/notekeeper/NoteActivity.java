@@ -227,9 +227,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             finish();
         } else if(id == R.id.action_next){
             moveNext();
+        }else if (id == R.id.action_set_notification){
+            setNotificationReminder();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setNotificationReminder() {
+        NoteReminderNotification.notify(this , "This is dumy text" , 0);
     }
 
 
