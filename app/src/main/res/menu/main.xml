@@ -6,4 +6,8 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:title="Backup notes"
+        android:orderInCategory="1"
+        android:id="action_backup_notes"/>
 </menu>
