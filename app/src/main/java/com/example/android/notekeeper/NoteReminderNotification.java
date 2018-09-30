@@ -42,7 +42,7 @@ public class NoteReminderNotification {
      * @see #cancel(Context)
      */
     public static void notify(final Context context,
-                              final String noteText , final String noteTitle) {
+                              final String noteText , final String noteTitle , int noteId) {
         final Resources res = context.getResources();
 
         // This image is used as the notification's large icon (thumbnail).
@@ -51,10 +51,9 @@ public class NoteReminderNotification {
 
 
         final String ticker = "Review Note";
-     //   final String title = res.getString(
-     //           R.string.note_reminder_notification_title_template, exampleString);
-     //   final String text = res.getString(
-      //          R.string.note_reminder_notification_placeholder_text_template, exampleString);
+
+        Intent noteIntent = new Intent(context , NoteActivity.class)
+                .putExtra(NoteInfo.NOTE_POSITION , noteId);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
@@ -102,7 +101,7 @@ public class NoteReminderNotification {
                         PendingIntent.getActivity(
                                 context,
                                 0,
-                                new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")),
+                                noteIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
 
                 // Automatically dismiss the notification when it is touched.
@@ -124,7 +123,7 @@ public class NoteReminderNotification {
 
     /**
      * Cancels any notifications of this type previously shown using
-     * {@link #notify(Context, String , String)}.
+     * {@link #notify(Context, String , String , int)}.
      */
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public static void cancel(final Context context) {
