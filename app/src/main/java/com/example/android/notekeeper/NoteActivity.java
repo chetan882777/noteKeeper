@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -57,6 +58,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private Boolean mCoursesQueryFinished;
     private Boolean mNotesQueryFinished;
     private Uri mNoteUri;
+    private String TAG = NoteActivity.class.getSimpleName();
 
     @Override
     protected void onDestroy() {
@@ -201,6 +203,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             protected Uri doInBackground(ContentValues... contentValues) {
                 ContentValues insertValue = contentValues[0];
 
+                Log.d(TAG , "doInBackground method " + Thread.currentThread().getId());
                 Uri rowUri = getContentResolver().insert(Notes.CONTENT_URI , insertValue);
                 return rowUri;
             }
@@ -208,6 +211,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             protected void onPostExecute(Uri uri) {
                 mNoteUri = uri;
+                Log.d(TAG , "onPostExecute method " + Thread.currentThread().getId());
             }
         };
 
@@ -216,6 +220,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(Notes.COLUMN_NOTE_TITLE , "");
         values.put(Notes.COLUMN_NOTE_TEXT , "");
 
+        Log.d(TAG , "Call to execute " + Thread.currentThread().getId());
         task.execute(values);
          }
 
