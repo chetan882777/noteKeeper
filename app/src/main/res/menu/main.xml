@@ -9,5 +9,5 @@
     <item
         android:title="Backup notes"
         android:orderInCategory="1"
-        android:id="action_backup_notes"/>
+        android:id="@+id/action_backup_notes"/>
 </menu>
