@@ -10,4 +10,8 @@
         android:title="Backup notes"
         android:orderInCategory="1"
         android:id="@+id/action_backup_notes"/>
+    <item
+        android:title="Upload notes"
+        android:orderInCategory="2"
+        android:id="@+id/action_upload_notes"/>
 </menu>
