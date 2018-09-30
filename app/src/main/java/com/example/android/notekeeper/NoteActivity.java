@@ -200,7 +200,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void createNewNote() {
-        AsyncTask<ContentValues , Void , Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+        AsyncTask<ContentValues , Integer , Uri> task = new AsyncTask<ContentValues, Integer, Uri>() {
 
             private ProgressBar progressBar = null;
 
@@ -217,16 +217,24 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 Log.d(TAG , "doInBackground method " + Thread.currentThread().getId());
                 simulateLongRunningWork();
+                publishProgress(2);
 
                 simulateLongRunningWork();
+                publishProgress(3);
+
                 Uri rowUri = getContentResolver().insert(Notes.CONTENT_URI , insertValue);
                 return rowUri;
             }
 
             @Override
+            protected void onProgressUpdate(Integer... values) {
+                progressBar.setProgress(values[0]);
+            }
+
+            @Override
             protected void onPostExecute(Uri uri) {
                 mNoteUri = uri;
-
+                progressBar.setVisibility(View.GONE);
                 displaySnackbar(mNoteUri.toString());
                 Log.d(TAG , "onPostExecute method " + Thread.currentThread().getId());
             }
