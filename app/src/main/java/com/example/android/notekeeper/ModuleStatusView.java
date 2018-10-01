@@ -22,6 +22,11 @@ public class ModuleStatusView extends View {
     private float mShapSpacing;
     private float mShapeSize;
     private float mOutlineWidth;
+    private int mOutlineColor;
+    private Paint mPaintOutline;
+    private Paint mPaintFill;
+    private Rect[] mModuleRectangles;
+    private float mRadius;
 
 
     public boolean[] getModuleStatus() {
@@ -60,57 +65,50 @@ public class ModuleStatusView extends View {
         mShapeSize = 144f;
         mShapSpacing = 30f;
 
+        mRadius = (mShapeSize - mOutlineWidth)/2;
+
         setupModuleRectangles();
+
+        mOutlineColor = Color.BLACK;
+        mPaintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintOutline.setStyle(Paint.Style.STROKE);
+        mPaintOutline.setStrokeWidth(mOutlineWidth);
+        mPaintOutline.setColor(mOutlineColor);
+
+        mPaintFill = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintFill.setStyle(Paint.Style.FILL);
+        mPaintFill.setColor(getContext().getResources().getColor(R.color.colorAccent));
 
      }
 
     private void setupModuleRectangles() {
-        Rect[] moduleRectangles = new Rect[mModuleStatus.length];
+        mModuleRectangles = new Rect[mModuleStatus.length];
 
         for(int moduleIndex = 0 ; moduleIndex < mModuleStatus.length ; moduleIndex ++){
             int x =  (int)( moduleIndex * (mShapeSize + mShapSpacing));
             int y = 0;
 
-            moduleRectangles[moduleIndex] = new Rect(x, y ,
+            mModuleRectangles[moduleIndex] = new Rect(x, y ,
                     x +(int) mShapeSize , y + (int) mShapeSize );
 
         }
     }
 
-    private void invalidateTextPaintAndMeasurements() {
-        mTextPaint.setTextSize(mExampleDimension);
-        mTextPaint.setColor(mExampleColor);
-        mTextWidth = mTextPaint.measureText(mExampleString);
 
-        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = fontMetrics.bottom;
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
+        for(int moduleIndex = 0 ; moduleIndex < mModuleStatus.length ; moduleIndex ++){
+            float x = mModuleRectangles[moduleIndex].centerX();
+            float y = mModuleRectangles[moduleIndex].centerY();
 
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
+            if(mModuleStatus[moduleIndex]){
+            canvas.drawCircle(x , y , mRadius , mPaintFill);
+            }
 
-        // Draw the text.
-        canvas.drawText(mExampleString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
-                mTextPaint);
-
-        // Draw the example drawable on top of the text.
-        if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
+            canvas.drawCircle(x,y,mRadius , mPaintOutline);
         }
     }
 
@@ -131,7 +129,7 @@ public class ModuleStatusView extends View {
      */
     public void setExampleString(String exampleString) {
         mExampleString = exampleString;
-        invalidateTextPaintAndMeasurements();
+
     }
 
     /**
@@ -151,7 +149,7 @@ public class ModuleStatusView extends View {
      */
     public void setExampleColor(int exampleColor) {
         mExampleColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
+
     }
 
     /**
@@ -171,7 +169,7 @@ public class ModuleStatusView extends View {
      */
     public void setExampleDimension(float exampleDimension) {
         mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
+
     }
 
     /**
