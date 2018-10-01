@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -312,6 +313,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        long currentTImeInMilliseconds = SystemClock.elapsedRealtime();
+
+        long ONE_HOUR = 60 * 60 * 1000 + currentTImeInMilliseconds;
+
+        long TEN_SEC = 10 * 1000 + currentTImeInMilliseconds;
+
+        manager.set(AlarmManager.ELAPSED_REALTIME , TEN_SEC , pendingIntent);
     }
 
 
