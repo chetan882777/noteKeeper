@@ -1,6 +1,8 @@
 package com.example.android.notekeeper;
 
+import android.app.AlarmManager;
 import android.app.LoaderManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -297,7 +299,19 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String noteText = mTextNotetext.getText().toString();
         String noteTitle = mTextNoteTitle.getText().toString();
         int noteId= (int) ContentUris.parseId(mNoteUri);
-        NoteReminderNotification.notify(this , noteText , noteTitle, noteId);
+
+        Intent intent = new Intent(this , NoteReminderReceiver.class);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_ID , noteId);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TEXT , noteText);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TITLE , noteTitle);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this ,
+                0 ,
+                intent ,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
 

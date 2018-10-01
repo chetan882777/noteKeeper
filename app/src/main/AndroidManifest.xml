@@ -51,7 +51,12 @@
             android:name=".NoteUploaderJobService"
             android:enabled="true"
             android:exported="false"
-            android:permission="android.permission.BIND__JOB_SERVICE"/>
+            android:permission="android.permission.BIND__JOB_SERVICE" />
+
+        <receiver
+            android:name=".NoteReminderReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>
