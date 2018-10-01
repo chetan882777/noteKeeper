@@ -40,6 +40,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     public static final String ORIGINAL_NOTE_COURSE_ID  = "com.example.android.notekeeper.ORIGINAL_NOTE_COURSE_ID";
     public static final String ORIGINAL_NOTE_TITLE  = "com.example.android.notekeeper.ORIGINAL_NOTE_TITLE";
     public static final String ORIGINAL_NOTE_TEXT  = "com.example.android.notekeeper.ORIGINAL_NOTE_TEXT";
+    private static final String NOTE_URI = "com.example.android.notekeeper.ORIGINAL_NOTE_URI";
 
     public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
@@ -110,6 +111,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             saveOriginalNoteValues();
         }else{
             restoreOriginalValues(savedInstanceState);
+            String noteUri = savedInstanceState.getString(NOTE_URI);
+            mNoteUri = Uri.parse(noteUri);
         }
     }
 
@@ -151,6 +154,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         outState.putString(ORIGINAL_NOTE_COURSE_ID , mOriginalCourseId);
         outState.putString(ORIGINAL_NOTE_TITLE  , mOriginalNoteTitle);
         outState.putString(ORIGINAL_NOTE_TEXT , mOriginalNoteText);
+
+        outState.putString(NOTE_URI, mNoteUri.toString());
     }
 
     private void saveOriginalNoteValues() {
