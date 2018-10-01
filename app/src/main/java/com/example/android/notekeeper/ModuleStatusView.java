@@ -15,6 +15,7 @@ import android.view.View;
  * TODO: document your custom view class.
  */
 public class ModuleStatusView extends View {
+    private static final int EDIT_MODE_MODULE_COUNT = 7;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -56,6 +57,9 @@ public class ModuleStatusView extends View {
 
     private void init(AttributeSet attrs, int defStyle) {
         // Load attributes
+        if(isInEditMode()){
+            setupEditMOdeValues();
+        }
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModuleStatusView, defStyle, 0);
 
@@ -80,6 +84,15 @@ public class ModuleStatusView extends View {
         mPaintFill.setColor(getContext().getResources().getColor(R.color.colorAccent));
 
      }
+
+    private void setupEditMOdeValues() {
+        boolean[] exampleModuleValues = new boolean[EDIT_MODE_MODULE_COUNT];
+        int middle = EDIT_MODE_MODULE_COUNT /2 ;
+        for(int moduleIndex = 0 ;  moduleIndex< middle ; moduleIndex ++){
+            exampleModuleValues[moduleIndex] = true;
+        }
+        setModuleStatus(exampleModuleValues);
+    }
 
     private void setupModuleRectangles() {
         mModuleRectangles = new Rect[mModuleStatus.length];
