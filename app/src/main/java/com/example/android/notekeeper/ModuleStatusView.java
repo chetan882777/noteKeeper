@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -18,10 +19,10 @@ public class ModuleStatusView extends View {
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
+    private float mShapSpacing;
+    private float mShapeSize;
+    private float mOutlineWidth;
 
-    private TextPaint mTextPaint;
-    private float mTextWidth;
-    private float mTextHeight;
 
     public boolean[] getModuleStatus() {
         return mModuleStatus;
@@ -53,32 +54,27 @@ public class ModuleStatusView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModuleStatusView, defStyle, 0);
 
-        mExampleString = a.getString(
-                R.styleable.ModuleStatusView_exampleString);
-        mExampleColor = a.getColor(
-                R.styleable.ModuleStatusView_exampleColor,
-                mExampleColor);
-        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
-        // values that should fall on pixel boundaries.
-        mExampleDimension = a.getDimension(
-                R.styleable.ModuleStatusView_exampleDimension,
-                mExampleDimension);
-
-        if (a.hasValue(R.styleable.ModuleStatusView_exampleDrawable)) {
-            mExampleDrawable = a.getDrawable(
-                    R.styleable.ModuleStatusView_exampleDrawable);
-            mExampleDrawable.setCallback(this);
-        }
-
         a.recycle();
 
-        // Set up a default TextPaint object
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
+        mOutlineWidth = 6f;
+        mShapeSize = 144f;
+        mShapSpacing = 30f;
 
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements();
+        setupModuleRectangles();
+
+     }
+
+    private void setupModuleRectangles() {
+        Rect[] moduleRectangles = new Rect[mModuleStatus.length];
+
+        for(int moduleIndex = 0 ; moduleIndex < mModuleStatus.length ; moduleIndex ++){
+            int x =  (int)( moduleIndex * (mShapeSize + mShapSpacing));
+            int y = 0;
+
+            moduleRectangles[moduleIndex] = new Rect(x, y ,
+                    x +(int) mShapeSize , y + (int) mShapeSize );
+
+        }
     }
 
     private void invalidateTextPaintAndMeasurements() {
