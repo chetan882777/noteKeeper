@@ -168,6 +168,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         int courseindex = getIndexOfCourseId(coursId);
         mSpinnerCourse.setSelection(courseindex);
+
+        CourseEventBroadcastHelper.sendEventBroadcast(this , coursId , "Editing Note");
     }
 
     private int getIndexOfCourseId(String courseId){
