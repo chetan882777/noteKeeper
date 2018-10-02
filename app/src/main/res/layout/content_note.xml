@@ -67,6 +67,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="@+id/text_note_text"
         app:layout_constraintStart_toStartOf="@+id/text_note_text"
-        app:layout_constraintTop_toBottomOf="@+id/text_note_text" />
+        app:layout_constraintTop_toBottomOf="@+id/text_note_text"
+        app:outlineColor="#ff0000" />
 
 </android.support.constraint.ConstraintLayout>
