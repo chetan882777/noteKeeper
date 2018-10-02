@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class ModuleStatusView extends View {
     private static final int EDIT_MODE_MODULE_COUNT = 7;
     private static final int INVALID_MODULE_INDEX = -1;
     private static final int MODULE_CIRCLE = 0;
+    private static final float DEFAULT_OUTLINE_WIDTH_DP = 2f;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -65,18 +67,23 @@ public class ModuleStatusView extends View {
         if(isInEditMode()){
             setupEditMOdeValues();
         }
+
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        float displayDensity = dm.density;
+        float defaultOutlineWidth = displayDensity * DEFAULT_OUTLINE_WIDTH_DP;
+
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModuleStatusView, defStyle, 0);
 
         mOutlineColor = a.getColor(R.styleable.ModuleStatusView_outlineColor , Color.BLACK);
         mShape = a.getInt(R.styleable.ModuleStatusView_shape , MODULE_CIRCLE);
-        mOutlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth , 6f);
+        mOutlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth , defaultOutlineWidth);
 
         a.recycle();
 
 
-        mShapeSize = 144f;
-        mShapSpacing = 30f;
+        mShapeSize = displayDensity * 144f/3;
+        mShapSpacing = displayDensity * 10f;
 
         mRadius = (mShapeSize - mOutlineWidth)/2;
 
