@@ -72,8 +72,6 @@ public class ModuleStatusView extends View {
 
         mRadius = (mShapeSize - mOutlineWidth)/2;
 
-        setupModuleRectangles();
-
         mOutlineColor = Color.BLACK;
         mPaintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintOutline.setStyle(Paint.Style.STROKE);
@@ -95,17 +93,33 @@ public class ModuleStatusView extends View {
         setModuleStatus(exampleModuleValues);
     }
 
-    private void setupModuleRectangles() {
+    private void setupModuleRectangles(int width) {
+
+        int availableWidth = width - getPaddingLeft() - getPaddingRight();
+        int horizontalModulesThatCanFit = (int) (availableWidth / (mShapSpacing + mShapeSize));
+
+        int maxHorizontalModules = Math.min(horizontalModulesThatCanFit , mModuleStatus.length);
+
         mModuleRectangles = new Rect[mModuleStatus.length];
 
-        for(int moduleIndex = 0 ; moduleIndex < mModuleStatus.length ; moduleIndex ++){
-            int x =  getPaddingLeft() + (int)( moduleIndex * (mShapeSize + mShapSpacing));
-            int y = getPaddingTop();
+        for(int moduleIndex = 0 ; moduleIndex < mModuleRectangles.length ; moduleIndex ++){
+            int column = moduleIndex % maxHorizontalModules ;
+
+            int row = moduleIndex / maxHorizontalModules;
+
+
+            int x =  getPaddingLeft() + (int)( column * (mShapeSize + mShapSpacing));
+            int y = getPaddingTop() + (int)( row * (mShapeSize + mShapSpacing));
 
             mModuleRectangles[moduleIndex] = new Rect(x, y ,
                     x +(int) mShapeSize , y + (int) mShapeSize );
 
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        setupModuleRectangles(w);
     }
 
     @Override
@@ -117,11 +131,11 @@ public class ModuleStatusView extends View {
         int specWidth = MeasureSpec.getSize(widthMeasureSpec);
 
         int availableWidth = specWidth - getPaddingLeft()  - getPaddingRight();
-        int horizontalModulesThatCanFit = (int) (mModuleStatus.length / (mShapSpacing - mShapeSize));
+        int horizontalModulesThatCanFit = (int) (availableWidth / (mShapSpacing + mShapeSize));
 
         mMaxHorizontalModules = Math.min(horizontalModulesThatCanFit , mModuleStatus.length);
 
-        desiredWidth = (int) ((mMaxHorizontalModules * (mShapeSize + mShapSpacing) - mShapSpacing));
+        desiredWidth = (int) ((mMaxHorizontalModules * (mShapeSize + mShapSpacing)) - mShapSpacing);
         desiredWidth += getPaddingLeft() + getPaddingRight();
 
 
