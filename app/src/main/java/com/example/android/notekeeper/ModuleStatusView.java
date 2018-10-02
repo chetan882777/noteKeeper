@@ -28,6 +28,7 @@ public class ModuleStatusView extends View {
     private Paint mPaintFill;
     private Rect[] mModuleRectangles;
     private float mRadius;
+    private int mMaxHorizontalModules;
 
 
     public boolean[] getModuleStatus() {
@@ -113,11 +114,21 @@ public class ModuleStatusView extends View {
         int desiredWidth = 0;
         int desiredHeight = 0;
 
+        int specWidth = MeasureSpec.getSize(widthMeasureSpec);
 
-        desiredWidth = (int) ((mModuleStatus.length * (mShapeSize + mShapSpacing) - mShapSpacing));
+        int availableWidth = specWidth - getPaddingLeft()  - getPaddingRight();
+        int horizontalModulesThatCanFit = (int) (mModuleStatus.length / (mShapSpacing - mShapeSize));
+
+        mMaxHorizontalModules = Math.min(horizontalModulesThatCanFit , mModuleStatus.length);
+
+        desiredWidth = (int) ((mMaxHorizontalModules * (mShapeSize + mShapSpacing) - mShapSpacing));
         desiredWidth += getPaddingLeft() + getPaddingRight();
 
-        desiredHeight = (int)mShapeSize + getPaddingTop() + getPaddingBottom();
+
+        int row = ((mModuleStatus.length -1 )/ mMaxHorizontalModules) +1;
+
+        desiredHeight = (int) ((row * (mShapeSize  + mShapSpacing)) - mShapSpacing);
+        desiredHeight = desiredHeight + getPaddingTop() + getPaddingBottom();
 
         int width = resolveSizeAndState(desiredWidth , widthMeasureSpec , 0);
         int height = resolveSizeAndState(desiredHeight , heightMeasureSpec , 0);
