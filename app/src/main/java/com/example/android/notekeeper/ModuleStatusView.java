@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -16,6 +17,7 @@ import android.view.View;
  */
 public class ModuleStatusView extends View {
     private static final int EDIT_MODE_MODULE_COUNT = 7;
+    private static final int INVALID_MODULE_INDEX = -1;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -115,6 +117,34 @@ public class ModuleStatusView extends View {
                     x +(int) mShapeSize , y + (int) mShapeSize );
 
         }
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()){
+
+            case MotionEvent.ACTION_DOWN:
+                return true;
+
+            case MotionEvent.ACTION_UP:
+                int moduleIndex = findItemAtPoint(event.getX() , event.getY());
+                return true;
+
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    private int findItemAtPoint(float x, float y) {
+        int moduleIndex = INVALID_MODULE_INDEX;
+
+        for(int i = 0 ; i < mModuleRectangles.length ; i++){
+            if(mModuleRectangles[i].contains((int)x ,(int)y)){
+                return i;
+            }
+        }
+        return moduleIndex;
     }
 
     @Override
