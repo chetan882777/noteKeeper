@@ -115,7 +115,7 @@ public class ModuleStatusView extends View {
 
 
         desiredWidth = (int) ((mModuleStatus.length * (mShapeSize + mShapSpacing) - mShapSpacing));
-        desiredHeight += getPaddingLeft() + getPaddingRight();
+        desiredWidth += getPaddingLeft() + getPaddingRight();
 
         desiredHeight = (int)mShapeSize + getPaddingTop() + getPaddingBottom();
 
