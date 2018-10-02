@@ -1,5 +1,10 @@
 <resources>
     <declare-styleable name="ModuleStatusView">
         <attr name="outlineColor" format="color"/>
+        <attr name="shape" format="enum">
+            <enum name="Circle" value="0"/>
+            <enum name="Square" value="1"/>
+        </attr>
+        <attr name="outlineWidth" format="dimension"/>
     </declare-styleable>
 </resources>
