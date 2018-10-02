@@ -60,4 +60,13 @@
         app:layout_constraintStart_toStartOf="@id/text_title_note"
         app:layout_constraintTop_toBottomOf="@id/text_title_note" />
 
+    <com.example.android.notekeeper.ModuleStatusView
+        android:id="@+id/moduleStatusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_note_text" />
+
 </android.support.constraint.ConstraintLayout>

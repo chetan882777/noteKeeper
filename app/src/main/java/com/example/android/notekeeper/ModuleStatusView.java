@@ -98,8 +98,8 @@ public class ModuleStatusView extends View {
         mModuleRectangles = new Rect[mModuleStatus.length];
 
         for(int moduleIndex = 0 ; moduleIndex < mModuleStatus.length ; moduleIndex ++){
-            int x =  (int)( moduleIndex * (mShapeSize + mShapSpacing));
-            int y = 0;
+            int x =  getPaddingLeft() + (int)( moduleIndex * (mShapeSize + mShapSpacing));
+            int y = getPaddingTop();
 
             mModuleRectangles[moduleIndex] = new Rect(x, y ,
                     x +(int) mShapeSize , y + (int) mShapeSize );
