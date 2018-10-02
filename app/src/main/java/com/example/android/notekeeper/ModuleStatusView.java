@@ -129,11 +129,19 @@ public class ModuleStatusView extends View {
 
             case MotionEvent.ACTION_UP:
                 int moduleIndex = findItemAtPoint(event.getX() , event.getY());
+                onModuleSelected(moduleIndex);
                 return true;
 
         }
 
         return super.onTouchEvent(event);
+    }
+
+    private void onModuleSelected(int moduleIndex) {
+        if(moduleIndex == INVALID_MODULE_INDEX){return;}
+
+        mModuleStatus[moduleIndex] = ! mModuleStatus[moduleIndex];
+        invalidate();
     }
 
     private int findItemAtPoint(float x, float y) {
