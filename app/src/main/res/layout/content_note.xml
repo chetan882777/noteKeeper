@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@id/text_title_note" />
 
     <com.example.android.notekeeper.ModuleStatusView
-        android:id="@+id/moduleStatusView"
+        android:id="@+id/module_status_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
