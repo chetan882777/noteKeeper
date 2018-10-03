@@ -278,17 +278,25 @@ public class ModuleStatusView extends View {
 
        @Override
        protected int getVirtualViewAt(float x, float y) {
-           return 0;
+           int moduleIndex = findItemAtPoint(x ,y);
+           return moduleIndex == INVALID_MODULE_INDEX ? ExploreByTouchHelper.INVALID_ID : moduleIndex;
        }
 
        @Override
        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+           if(virtualViewIds == null)
+               return;
 
+           for(int moduleIndex = 0 ; moduleIndex < mModuleRectangles.length ; moduleIndex ++ ){
+               virtualViewIds.add(moduleIndex);
+           }
        }
 
        @Override
        protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
-
+            node.setFocusable(true);
+            node.setBoundsInParent(mModuleRectangles[virtualViewId]);
+            node.setContentDescription("module " + virtualViewId);
        }
 
        @Override
