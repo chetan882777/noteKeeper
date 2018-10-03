@@ -7,11 +7,20 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.support.v4.widget.ExploreByTouchHelper;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.List;
 
 /**
  * TODO: document your custom view class.
@@ -35,6 +44,7 @@ public class ModuleStatusView extends View {
     private float mRadius;
     private int mMaxHorizontalModules;
     private int mShape;
+    private ModuleStatusAccessiblityHelper mAccessiblityHelper;
 
 
     public boolean[] getModuleStatus() {
@@ -67,6 +77,9 @@ public class ModuleStatusView extends View {
         if(isInEditMode()){
             setupEditMOdeValues();
         }
+        setFocusable(true);
+        mAccessiblityHelper = new ModuleStatusAccessiblityHelper(this);
+        ViewCompat.setAccessibilityDelegate(this , mAccessiblityHelper);
 
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         float displayDensity = dm.density;
@@ -97,6 +110,7 @@ public class ModuleStatusView extends View {
         mPaintFill.setColor(getContext().getResources().getColor(R.color.colorAccent));
 
      }
+
 
     private void setupEditMOdeValues() {
         boolean[] exampleModuleValues = new boolean[EDIT_MODE_MODULE_COUNT];
@@ -235,82 +249,51 @@ public class ModuleStatusView extends View {
 
     }
 
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
-    public String getExampleString() {
-        return mExampleString;
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        mAccessiblityHelper.onFocusChanged(gainFocus , direction , previouslyFocusedRect);
     }
 
-    /**
-     * Sets the view's example string attribute value. In the example view, this string
-     * is the text to draw.
-     *
-     * @param exampleString The example string attribute value to use.
-     */
-    public void setExampleString(String exampleString) {
-        mExampleString = exampleString;
-
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return mAccessiblityHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
     }
 
-    /**
-     * Gets the example color attribute value.
-     *
-     * @return The example color attribute value.
-     */
-    public int getExampleColor() {
-        return mExampleColor;
+    @Override
+    protected boolean dispatchHoverEvent(MotionEvent event) {
+        return mAccessiblityHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
     }
 
-    /**
-     * Sets the view's example color attribute value. In the example view, this color
-     * is the font color.
-     *
-     * @param exampleColor The example color attribute value to use.
-     */
-    public void setExampleColor(int exampleColor) {
-        mExampleColor = exampleColor;
+    private class ModuleStatusAccessiblityHelper extends ExploreByTouchHelper{
+       /**
+        * Constructs a new helper that can expose a virtual view hierarchy for the
+        * specified host view.
+        *
+        * @param host view whose virtual view hierarchy is exposed by this helper
+        */
+       public ModuleStatusAccessiblityHelper(@NonNull View host) {
+           super(host);
+       }
 
-    }
+       @Override
+       protected int getVirtualViewAt(float x, float y) {
+           return 0;
+       }
 
-    /**
-     * Gets the example dimension attribute value.
-     *
-     * @return The example dimension attribute value.
-     */
-    public float getExampleDimension() {
-        return mExampleDimension;
-    }
+       @Override
+       protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
 
-    /**
-     * Sets the view's example dimension attribute value. In the example view, this dimension
-     * is the font size.
-     *
-     * @param exampleDimension The example dimension attribute value to use.
-     */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
+       }
 
-    }
+       @Override
+       protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
 
-    /**
-     * Gets the example drawable attribute value.
-     *
-     * @return The example drawable attribute value.
-     */
-    public Drawable getExampleDrawable() {
-        return mExampleDrawable;
-    }
+       }
 
-    /**
-     * Sets the view's example drawable attribute value. In the example view, this drawable is
-     * drawn above the text.
-     *
-     * @param exampleDrawable The example drawable attribute value to use.
-     */
-    public void setExampleDrawable(Drawable exampleDrawable) {
-        mExampleDrawable = exampleDrawable;
-    }
+       @Override
+       protected boolean onPerformActionForVirtualView(int virtualViewId, int action, @Nullable Bundle arguments) {
+           return false;
+       }
+   }
 }
