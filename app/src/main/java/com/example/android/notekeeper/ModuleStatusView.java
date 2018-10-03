@@ -297,6 +297,9 @@ public class ModuleStatusView extends View {
             node.setFocusable(true);
             node.setBoundsInParent(mModuleRectangles[virtualViewId]);
             node.setContentDescription("module " + virtualViewId);
+
+            node.setCheckable(true);
+            node.setChecked(mModuleStatus[virtualViewId]);
        }
 
        @Override
